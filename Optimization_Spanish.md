@@ -10,7 +10,7 @@
 [![Paper](https://img.shields.io/badge/Paper-Compatible-orange?style=for-the-badge)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21+-red?style=for-the-badge)](https://adoptium.net)
 [![Licencia](https://img.shields.io/badge/Licencia-MIT-purple?style=for-the-badge)](LICENSE)
-[![EN](https://img.shields.io/badge/Lang-English-blue?style=for-the-badge)](README.en.md)
+[![ES](https://img.shields.io/badge/Lang-Spanish-blue?style=for-the-badge)](README.en.md)
 
 <br>
 
@@ -722,29 +722,7 @@ Dano de vacio sobre el techo del Nether (altura 128). Evita que los jugadores ex
 G1GC sigue siendo la mejor opcion para la mayoria de servidores en 2026. Las flags de Aikar son el estandar de la industria:
 
 ```bash
-java -Xms8G -Xmx8G \
-  -XX:+UseG1GC \
-  -XX:+ParallelRefProcEnabled \
-  -XX:MaxGCPauseMillis=200 \
-  -XX:+UnlockExperimentalVMOptions \
-  -XX:+DisableExplicitGC \
-  -XX:+AlwaysPreTouch \
-  -XX:G1NewSizePercent=30 \
-  -XX:G1MaxNewSizePercent=40 \
-  -XX:G1HeapRegionSize=8M \
-  -XX:G1ReservePercent=20 \
-  -XX:G1HeapWastePercent=5 \
-  -XX:G1MixedGCCountTarget=4 \
-  -XX:InitiatingHeapOccupancyPercent=15 \
-  -XX:G1MixedGCLiveThresholdPercent=90 \
-  -XX:G1RSetUpdatingPauseTimePercent=5 \
-  -XX:SurvivorRatio=32 \
-  -XX:+PerfDisableSharedMem \
-  -XX:MaxTenuringThreshold=1 \
-  -Dusing.aikars.flags=https://mcflags.emc.gs \
-  -Daikars.new.flags=true \
-  --add-modules=jdk.incubator.vector \
-  -jar server.jar --nogui
+java -Xms8G -Xmx8G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true --add-modules=jdk.incubator.vector -jar server.jar --nogui
 ```
 
 > Ajusta `-Xms` y `-Xmx` al mismo valor para evitar que la JVM redimensione el heap durante el juego.
@@ -754,14 +732,7 @@ java -Xms8G -Xmx8G \
 Generational ZGC esta disponible desde Java 21 y es ideal para servidores con 150+ jugadores o alta tasa de allocacion de memoria:
 
 ```bash
-java -Xms10G -Xmx10G \
-  -XX:+UseZGC \
-  -XX:+ZGenerational \
-  -XX:+AlwaysPreTouch \
-  -XX:+DisableExplicitGC \
-  -XX:+UnlockExperimentalVMOptions \
-  --add-modules=jdk.incubator.vector \
-  -jar server.jar --nogui
+java -Xms10G -Xmx10G -XX:+UseZGC -XX:+ZGenerational -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:+UnlockExperimentalVMOptions --add-modules=jdk.incubator.vector -jar server.jar --nogui
 ```
 
 > No mezcles flags de G1GC con ZGC. Son colectores completamente diferentes. ZGC tiene pausas de sub-milisegundo pero mayor overhead de CPU. Usa `/spark gcmonitor` para medir antes de cambiar.
@@ -980,7 +951,7 @@ Tambien puedes abrir un **Issue** si encuentras errores o tienes sugerencias.
 
 | Fuente | Descripcion |
 |--------|-------------|
-| [YouHaveTrouble/minecraft-optimization](https://github.com/zMarkitos_/zMOptimization_Minecraft_2026) | Guia original base |
+| [zMarkitos_/zMOptimization_Minecraft_2026](https://github.com/zMarkitos_/zMOptimization_Minecraft_2026) | Guia original base |
 | [PaperMC Documentation](https://docs.papermc.io) | Documentacion oficial de Paper |
 | [Pufferfish Optimization Guide](https://docs.pufferfish.host/optimization/) | Guia oficial de Pufferfish |
 | [Purpur Documentation](https://purpurmc.org/docs/) | Documentacion oficial de Purpur |
@@ -996,11 +967,10 @@ Tambien puedes abrir un **Issue** si encuentras errores o tienes sugerencias.
 Hecho para la comunidad de Minecraft en espanol
 
 [![GitHub](https://img.shields.io/badge/GitHub-zMarkitos-black?style=for-the-badge&logo=github)](https://github.com/zMarkitos)
-[![Twitter/X](https://img.shields.io/badge/Twitter-@zMarkitos_-blue?style=for-the-badge&logo=x)](https://x.com/zMarkitos)
 
 <br>
 
-> Basado en el proyecto original de [YouHaveTrouble](https://github.com/zMarkitos/zMOptimization_Minecraft_2026)
-> Actualizacion 2026 y mejoras por [zMarkitos_](https://x.com/zMarkitos)
+> Basado en el proyecto original de [zMarkitos_](https://github.com/zMarkitos/zMOptimization_Minecraft_2026)
+> Actualizacion 2026 y mejoras por zMarkitos_
 
 </div>
