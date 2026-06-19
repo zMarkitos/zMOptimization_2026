@@ -3,28 +3,28 @@
 <img src="https://raw.githubusercontent.com/zMarkitos/zMOptimization_Minecraft_2026/main/assets/banner.png" alt="Minecraft Optimization Guide" width="100%">
 
 # Minecraft Server Optimization Guide
-### The most complete and up-to-date guide for 2026
+### The most comprehensive and up-to-date guide for 2026
 
 [![Version](https://img.shields.io/badge/Version-2026.1-brightgreen?style=for-the-badge)](https://github.com)
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.20.x--1.21.x-blue?style=for-the-badge)](https://minecraft.net)
 [![Paper](https://img.shields.io/badge/Paper-Compatible-orange?style=for-the-badge)](https://papermc.io)
 [![Java](https://img.shields.io/badge/Java-21+-red?style=for-the-badge)](https://adoptium.net)
-[![Licencia](https://img.shields.io/badge/License-MIT-purple?style=for-the-badge)](LICENSE)
-[![ES](https://img.shields.io/badge/Lang-Español-red?style=for-the-badge)](README.md)
+[![License](https://img.shields.io/badge/License-MIT-purple?style=for-the-badge)](LICENSE)
+[![ES](https://img.shields.io/badge/Lang-English-blue?style=for-the-badge)](README.en.md)
 
 <br>
 
 > **Your server's performance doesn't depend solely on hardware.**
-> The right configuration can be the difference between stable 20 TPS and a server that collapses with 10 players.
+> The right configuration can be the difference between stable 20 TPS and a server that crashes with 10 players.
 
 <br>
 
 [Introduction](#introduction) •
-[Prerequisites](#prerequisites) •
-[Configuration](#configurations) •
+[Preparations](#preparations) •
+[Configurations](#configurations) •
 [Java Flags](#java-startup-flags) •
 [Plugins](#plugins-myths-and-realities) •
-[Diagnostics](#measuring-performance) •
+[Performance Monitoring](#measuring-performance) •
 [Exploits](#exploits-and-how-to-fix-them)
 
 </div>
@@ -34,9 +34,9 @@
 ## Table of Contents
 
 - [Introduction](#introduction)
-- [Prerequisites](#prerequisites)
-  - [Choosing a server JAR](#choosing-a-server-jar)
-  - [Map pre-generation](#map-pre-generation)
+- [Preparations](#preparations)
+  - [Choosing the Server JAR](#choosing-the-server-jar)
+  - [World Pre-generation](#world-pre-generation)
   - [Networks and Proxies](#networks-and-proxies)
 - [Configurations](#configurations)
   - [Networking](#networking)
@@ -45,8 +45,8 @@
   - [Miscellaneous](#miscellaneous)
   - [Helpers and Security](#helpers-and-security)
 - [Java Startup Flags](#java-startup-flags)
-  - [G1GC Recommended](#g1gc-recommended-for-most-servers)
-  - [ZGC Advanced](#zgc-for-high-traffic-servers)
+  - [Recommended G1GC](#g1gc-recommended-for-most)
+  - [Advanced ZGC](#zgc-for-high-traffic-servers)
 - [Plugins Myths and Realities](#plugins-myths-and-realities)
 - [Measuring Performance](#measuring-performance)
 - [Exploits and How to Fix Them](#exploits-and-how-to-fix-them)
@@ -59,41 +59,41 @@
 ## Introduction
 
 > **Important note for Vanilla, Fabric, or Spigot users:**
-> Go to `server.properties` and set `sync-chunk-writes` to `false`. On Paper and its forks this is forced to `false`, but on other implementations you must change it manually. This allows chunks to be saved off the main thread, drastically reducing main loop load.
+> Go to `server.properties` and change `sync-chunk-writes` to `false`. In Paper and its forks, this is forced to `false`, but in other implementations, you must change it manually. This allows chunks to be saved outside the main thread, drastically reducing the load on the main loop.
 
-**There is no such thing as a perfect universal configuration.** Every server has its own needs and limits. This guide aims to help you understand which options have a real impact on performance and what they actually change, so you can make informed decisions.
+**There will never be a perfect universal configuration.** Every server has its own needs and limits. This guide aims to help you understand which options have a real impact on performance and what exactly they change, so you can make informed decisions.
 
-### What you'll learn
+### What You Will Learn
 
 | Category | Expected Benefit |
-|----------|-----------------|
-| Correct software | Up to 3x better performance vs Vanilla/Spigot |
-| Chunk configuration | 40-60% reduction in CPU usage |
-| Mob optimization | 2-5 TPS improvement on loaded servers |
-| Java Flags | Elimination of 80-90% of GC lag spikes |
-| Correct plugins | Avoid losing up to 5 TPS from bad plugins |
+|-----------|-------------------|
+| Correct Software | Up to 3x better performance vs Vanilla/Spigot |
+| Chunk Configuration | 40-60% reduction in CPU usage |
+| Mob Optimization | 2-5 TPS improvement on loaded servers |
+| Java Flags | Elimination of 80-90% of lag spikes due to GC |
+| Correct Plugins | Avoid losing up to 5 TPS from bad plugins |
 
 ---
 
-## Prerequisites
+## Preparations
 
-### Choosing a Server JAR
+### Choosing the Server JAR
 
-Choosing your software is **the most important decision**. Here's the full landscape in 2026:
+Choosing the right software is **the most important decision**. Here is the complete landscape for 2026:
 
 #### Recommended Software
 
 ```
 Vanilla > Spigot > Paper > Pufferfish > Purpur
-         (each fork inherits the optimizations of the previous one)
+         (each fork inherits optimizations from the previous)
 ```
 
-| Software | Description | For whom | Link |
-|----------|-------------|----------|------|
-| **Paper** | The most popular fork. Fixes gameplay inconsistencies and significantly improves performance. Base of the entire hierarchy. | Most servers | [papermc.io](https://papermc.io) |
-| **Pufferfish** | Paper fork focused on pure performance. Includes DAB (Dynamic Activation Brain), async mob spawning, SIMD for maps, and more. | Servers with 50+ players or heavy farms | [pufferfish.host](https://pufferfish.host) |
-| **Purpur** | Fork of Pufferfish. Includes all optimizations plus hundreds of gameplay customization options. Extra features are off by default. | Servers that need extreme customization | [purpurmc.org](https://purpurmc.org) |
-| **Folia** | Experimental Paper fork with region-based multithreading. Breaks many plugins but can handle massive loads. | Servers with 150+ players, advanced use | [papermc.io/folia](https://papermc.io/software/folia) |
+| Software | Description | Best For | Link |
+|----------|-------------|------------|--------|
+| **Paper** | The most popular fork. Fixes gameplay inconsistencies and significantly improves performance. The foundation for the entire hierarchy. | Most servers | [papermc.io](https://papermc.io) |
+| **Pufferfish** | A Paper fork focused purely on performance. Includes DAB (Dynamic Activation Brain), asynchronous mob spawning, SIMD for maps, and more. | Servers with 50+ players or heavy farms | [pufferfish.host](https://pufferfish.host) |
+| **Purpur** | A Pufferfish fork. Includes all optimizations plus hundreds of gameplay customization options. Extra features are disabled by default. | Servers needing extreme customization | [purpurmc.org](https://purpurmc.org) |
+| **Folia** | An experimental Paper fork with region-based multithreading. Breaks many plugins but can handle massive loads. | Servers with 150+ players, advanced use | [papermc.io/folia](https://papermc.io/software/folia) |
 
 > **2026 Recommendation:** For a public SMP or survival server with plugins, use **Purpur** or **Pufferfish**. For a large network, consider **Folia** only if your plugins support it.
 
@@ -101,18 +101,18 @@ Vanilla > Spigot > Paper > Pufferfish > Purpur
 
 - **Bukkit / CraftBukkit / Spigot** — Extremely outdated in terms of performance. No reason to use them in 2026.
 - **Paid JARs that promise async everything** — 99.99% are scams or broken implementations.
-- **Exotic forks downstream of Purpur** — Almost always have stability issues with no real performance benefit.
+- **Exotic forks downstream of Purpur** — Almost always have stability issues without any real performance benefit.
 - **Unstable/snapshot versions** — If you want performance, use stable releases.
 
 ---
 
-### Map Pre-generation
+### World Pre-generation
 
-Pre-generation in 2026 is no longer strictly necessary on modern CPUs, but is still useful if:
+World pre-generation is no longer strictly necessary on modern CPUs in 2026, but it remains useful if:
 
 - You use world map plugins like [Pl3xMap](https://github.com/jpenilla/Pl3xMap) or [Dynmap](https://github.com/webbukkit/dynmap)
-- You have a very single-thread limited CPU
-- You want to completely eliminate new chunk generation lag
+- You have a very limited single-thread CPU
+- You want to completely eliminate lag from generating new chunks
 
 **Recommended plugin:** [Chunky](https://modrinth.com/plugin/chunky)
 
@@ -121,23 +121,23 @@ IMPORTANT: Always set a world border BEFORE pre-generating
 /worldborder set [diameter]
 ```
 
-> **The Overworld, Nether, and End have separate world borders.** The Nether is 1/8 the size of the Overworld. Configure each dimension correctly or players may end up outside the border.
+> **The Overworld, Nether, and End have separate world borders.** The Nether is 1/8 the size of the Overworld. Configure each dimension correctly, or players may end up outside the border.
 
-> **The vanilla world border also limits the search range for treasure maps**, which can cause massive lag spikes if not configured.
+> **The vanilla world border also limits treasure map search range**, which can cause massive lag spikes if not configured.
 
 ---
 
 ### Networks and Proxies
 
-If you manage a **server network**, the choice of proxy is crucial:
+If you manage a **server network**, choosing the proxy is crucial:
 
 | Proxy | Status in 2026 | Recommendation |
 |-------|---------------|----------------|
-| **BungeeCord** | Functional but legacy | Only if you need specific plugins with no alternative |
+| **BungeeCord** | Functional but legacy | Only if you need specific plugins without alternatives |
 | **Waterfall** | BungeeCord fork, more stable | Alternative if migrating from BungeeCord |
-| **Velocity** | Modern, high performance, actively developed | RECOMMENDED for any new network |
+| **Velocity** | Modern, high-performance, actively developed | RECOMMENDED for any new network |
 
-**Velocity**, developed by the PaperMC team, is the only real option for new networks in 2026. It supports 1000+ players with minimal performance degradation, has improved security, and a modern API.
+**Velocity**, developed by the PaperMC team, is the only real choice for new networks in 2026. It supports 1000+ players with minimal performance degradation, has improved security, and a modern API.
 
 ---
 
@@ -162,7 +162,7 @@ Defines the minimum size of a packet before the server compresses it.
 
 - **Higher** — Less CPU, more bandwidth
 - **`-1`** — Disables compression (ideal if the proxy is on the same machine with less than 2ms ping)
-- **Lower** — More CPU, less bandwidth (hurts slow connections)
+- **Lower** — More CPU, less bandwidth (harms slow connections)
 
 </details>
 
@@ -176,7 +176,7 @@ settings:
   use-alternate-keepalive: true
 ```
 
-Sends a keepalive packet per second to the player. Only kicks the player if none were responded to within 30 seconds. Reduces disconnections for players with unstable connections.
+Sends one keepalive packet per second to the player. Only ejects the player if none were answered in 30 seconds. Reduces disconnections for players with unstable connections.
 
 > Incompatible with **TCPShield**.
 
@@ -197,7 +197,7 @@ simulation-distance=4
 
 The distance (in chunks) around the player where things actually happen: furnaces, crops, trees, mobs, etc.
 
-Keeping it low (3-4) is intentional. It complements `view-distance` so players can see further without the same performance impact.
+Keeping it low (3-4) is intentional. It is complemented by `view-distance` so players see further without the same performance impact.
 
 </details>
 
@@ -208,7 +208,7 @@ Keeping it low (3-4) is intentional. It complements `view-distance` so players c
 view-distance=7
 ```
 
-Chunks sent visually to the client. The total distance will be the greater value between `simulation-distance` and `view-distance`.
+Chunks sent visually to the client. The total distance will be the larger value between `simulation-distance` and `view-distance`.
 
 > Example: simulation=4, view=7 — the client sees 7 chunks, but only 4 are actively simulated.
 
@@ -224,7 +224,7 @@ chunks:
   delay-chunk-unloads-by: 10s
 ```
 
-Keeps chunks loaded for 10 seconds after a player moves away. Avoids constantly loading/unloading the same chunks when a player goes back and forth.
+Keeps chunks loaded for 10 seconds after a player moves away. Prevents constantly loading/unloading the same chunks when a player goes back and forth.
 
 </details>
 
@@ -236,7 +236,7 @@ chunks:
   max-auto-save-chunks-per-tick: 8
 ```
 
-Distributes world saving over time for better average performance. With 20-30+ players, consider increasing to `12` or `16`.
+Spreads world saving over time for better average performance. With 20-30+ players, consider increasing to `12` or `16`.
 
 </details>
 
@@ -248,7 +248,7 @@ chunks:
   prevent-moving-into-unloaded-chunks: true
 ```
 
-Prevents players from entering unloaded chunks, preventing synchronization loads that stall the main thread.
+Prevents players from entering unloaded chunks, preventing sync loads that clog the main thread.
 
 </details>
 
@@ -291,7 +291,7 @@ Limits how many entities of each type can be saved per chunk. Prevents crashes w
 max-loads-per-projectile: 8
 ```
 
-Limits how many chunks a projectile can load during its flight path. Reduces lag from enderpearls and tridents.
+Limits how many chunks a projectile can load during its trajectory. Reduces lag from ender pearls and tridents.
 
 </details>
 
@@ -333,7 +333,7 @@ ticks-per:
   ambient-spawns: 400
 ```
 
-Frequency (in ticks) at which the server attempts to spawn each entity type. Animals and water mobs don't need to spawn every tick, as they don't die as quickly.
+Frequency (in ticks) at which the server attempts to spawn each type of entity. Animals and aquatic mobs don't need to spawn every tick, as they don't die as quickly.
 
 </details>
 
@@ -391,7 +391,7 @@ Distance in blocks at which entities are visible to clients. Must be greater tha
 nerf-spawner-mobs: true
 ```
 
-Mobs spawned by spawners will have no AI. Drastically improves performance on servers with many spawners. Mobs can still jump in water if `spawner-nerfed-mobs-should-jump: true` in paper-world.
+Mobs spawned by spawners will not have AI. Drastically improves performance on servers with many spawners. Mobs can jump in water if `spawner-nerfed-mobs-should-jump: true` in paper-world.
 
 </details>
 
@@ -418,7 +418,7 @@ entities:
         soft: 30
 ```
 
-- **Soft range:** random despawn probability
+- **Soft range:** random probability of despawning
 - **Hard range:** instant despawn
 - Recommended formula: `(simulation-distance x 16) + 8`
 
@@ -433,7 +433,7 @@ entities:
     per-player-mob-spawns: true
 ```
 
-Distributes mob spawning equitably among players. Prevents a player with a huge farm from monopolizing the entire mob cap.
+Distributes mob spawning equitably among players. Prevents one player with a huge farm from hogging the entire mob cap.
 
 </details>
 
@@ -445,7 +445,7 @@ entities:
   max-entity-collisions: 2
 ```
 
-Limits how many collisions an entity can process per tick. `0` makes it impossible to push entities. `2` is sufficient for most cases.
+Limits how many collisions an entity can process per tick. `0` makes pushing entities impossible. `2` is sufficient for most cases.
 
 </details>
 
@@ -457,13 +457,13 @@ entities:
   update-pathfinding-on-block-update: false
 ```
 
-Reduces unnecessary pathfinding. Mobs will update their route passively every 5 ticks instead of on every block update.
+Reduces unnecessary pathfinding. Mobs will update their path passively every 5 ticks instead of on every block update.
 
 </details>
 
 #### `pufferfish.yml` — DAB (Dynamic Activation Brain)
 
-> **One of the most important optimizations in Pufferfish.**
+> **One of Pufferfish's most important optimizations.**
 
 <details>
 <summary><b>dab.enabled</b> — Recommended value: true</summary>
@@ -475,15 +475,15 @@ dab:
   activation-dist-mod: 7
 ```
 
-DAB reduces how much an entity "thinks" based on how far it is from players. Unlike EAR (which makes a hard cutoff), DAB works in a gradient:
+DAB reduces how much an entity "thinks" based on how far it is from players. Unlike EAR (which makes a hard cutoff), DAB works on a gradient:
 
 - **Nearby entities** — full tick
-- **Far entities** — progressively reduced tick
+- **Distant entities** — progressively reduced tick
 
 | Option | Description | Recommended |
 |--------|-------------|-------------|
 | `max-tick-freq` | Slowest speed for distant entities | `20` |
-| `activation-dist-mod` | How close to the player activates DAB | `7` |
+| `activation-dist-mod` | How close to the player triggers DAB | `7` |
 
 > If DAB breaks your farms, try increasing `activation-dist-mod` or reducing `max-tick-freq`.
 
@@ -496,7 +496,7 @@ DAB reduces how much an entity "thinks" based on how far it is from players. Unl
 enable-async-mob-spawning: true
 ```
 
-Moves the computational calculation of mob spawning to a separate thread. Requires `per-player-mob-spawns: true` in Paper. Does not spawn mobs asynchronously, only optimizes the pre-calculation.
+Moves the computational calculation of mob spawning to a separate thread. Requires `per-player-mob-spawns: true` in Paper. It doesn't spawn mobs asynchronously, only optimizes the pre-calculation.
 
 </details>
 
@@ -513,7 +513,7 @@ mobs:
       check-interval: 100
 ```
 
-Villagers that can't follow a path lose their AI and only restock offers periodically. Enable only if villagers are causing lag.
+Villagers that can't pathfind lose their AI and only restock offers periodically. Activate only if villagers are causing lag.
 
 </details>
 
@@ -525,7 +525,7 @@ settings:
   entities-can-use-portals: false
 ```
 
-Prevents entities (not players) from using portals and loading chunks when changing dimensions.
+Prevents entities (non-players) from using portals and loading chunks when changing dimensions.
 
 </details>
 
@@ -544,7 +544,7 @@ merge-radius:
   exp: 4.0
 ```
 
-Distance at which items and exp orbs merge together, reducing entities on the ground. Too high can make items "teleport" through walls.
+Distance at which items and XP orbs merge with each other, reducing entities on the ground. Too high can cause items to "teleport" through walls.
 
 </details>
 
@@ -556,7 +556,7 @@ hopper-transfer: 8
 hopper-check: 8
 ```
 
-Wait ticks between hopper actions. Significantly improves performance with many hoppers. Very high values can break hopper clocks.
+Tick delays between hopper actions. Significantly improves performance with many hoppers. Very high values can break hopper clocks.
 
 </details>
 
@@ -592,7 +592,7 @@ entities:
         scaffolding: 600
 ```
 
-Common and valueless items despawn faster, reducing entities on the ground. An efficient alternative to cleanup plugins.
+Common and worthless items despawn faster, reducing entities on the ground. An efficient alternative to cleanup plugins.
 
 </details>
 
@@ -634,7 +634,7 @@ environment:
       villager-trade: true
 ```
 
-Generating treasure maps is extremely expensive and can freeze the server if the structure is in ungenerated chunks. Only enable if you have fully pre-generated your world.
+Generating treasure maps is extremely expensive and can hang the server if the structure is in ungenerated chunks. Only enable if you have pre-generated the world completely.
 
 </details>
 
@@ -648,7 +648,7 @@ entities:
     creative-arrow-despawn-rate: 20
 ```
 
-Mob and creative mode arrows despawn in 1 second (20 ticks) after impact. Players can't pick them up anyway.
+Arrows from mobs and creative mode disappear in 1 second (20 ticks) after impact. Players can't pick them up anyway.
 
 </details>
 
@@ -693,7 +693,7 @@ anticheat:
 Much more efficient than any anti-xray plugin. The performance impact is minimal.
 
 - **Mode 1:** Hides specific ores
-- **Mode 2 (Recommended):** Replaces blocks with fake ores, more secure but higher CPU usage
+- **Mode 2 (Recommended):** Replaces blocks with fake ores, more secure but slightly more CPU usage
 
 </details>
 
@@ -715,66 +715,37 @@ Void damage above the Nether ceiling (height 128). Prevents players from exploit
 
 > **Minecraft 1.20.4+ requires Java 21.**
 > Recommended providers: [Adoptium](https://adoptium.net/) and [Amazon Corretto](https://aws.amazon.com/corretto/)
-> Do not use Oracle JDK — licensing changes in 2023 make it unsuitable for production.
+> Don't use Oracle JDK — licensing changes in 2023 make it unsuitable for production.
 
-### G1GC Recommended for most servers
+### G1GC Recommended for Most
 
-G1GC remains the best option for most servers in 2026. Aikar's flags are the industry standard:
+G1GC remains the best choice for most servers in 2026. Aikar's flags are the industry standard:
 
 ```bash
-java -Xms8G -Xmx8G \
-  -XX:+UseG1GC \
-  -XX:+ParallelRefProcEnabled \
-  -XX:MaxGCPauseMillis=200 \
-  -XX:+UnlockExperimentalVMOptions \
-  -XX:+DisableExplicitGC \
-  -XX:+AlwaysPreTouch \
-  -XX:G1NewSizePercent=30 \
-  -XX:G1MaxNewSizePercent=40 \
-  -XX:G1HeapRegionSize=8M \
-  -XX:G1ReservePercent=20 \
-  -XX:G1HeapWastePercent=5 \
-  -XX:G1MixedGCCountTarget=4 \
-  -XX:InitiatingHeapOccupancyPercent=15 \
-  -XX:G1MixedGCLiveThresholdPercent=90 \
-  -XX:G1RSetUpdatingPauseTimePercent=5 \
-  -XX:SurvivorRatio=32 \
-  -XX:+PerfDisableSharedMem \
-  -XX:MaxTenuringThreshold=1 \
-  -Dusing.aikars.flags=https://mcflags.emc.gs \
-  -Daikars.new.flags=true \
-  --add-modules=jdk.incubator.vector \
-  -jar server.jar --nogui
+java -Xms8G -Xmx8G -XX:+UseG1GC -XX:+ParallelRefProcEnabled -XX:MaxGCPauseMillis=200 -XX:+UnlockExperimentalVMOptions -XX:+DisableExplicitGC -XX:+AlwaysPreTouch -XX:G1NewSizePercent=30 -XX:G1MaxNewSizePercent=40 -XX:G1HeapRegionSize=8M -XX:G1ReservePercent=20 -XX:G1HeapWastePercent=5 -XX:G1MixedGCCountTarget=4 -XX:InitiatingHeapOccupancyPercent=15 -XX:G1MixedGCLiveThresholdPercent=90 -XX:G1RSetUpdatingPauseTimePercent=5 -XX:SurvivorRatio=32 -XX:+PerfDisableSharedMem -XX:MaxTenuringThreshold=1 -Dusing.aikars.flags=https://mcflags.emc.gs -Daikars.new.flags=true --add-modules=jdk.incubator.vector -jar server.jar --nogui
 ```
 
 > Set `-Xms` and `-Xmx` to the same value to prevent the JVM from resizing the heap during gameplay.
 
-### ZGC For high-traffic servers
+### ZGC for High-Traffic Servers
 
-Generational ZGC is available since Java 21 and is ideal for servers with 150+ players or high memory allocation rate:
+Generational ZGC has been available since Java 21 and is ideal for servers with 150+ players or high memory allocation rates:
 
 ```bash
-java -Xms10G -Xmx10G \
-  -XX:+UseZGC \
-  -XX:+ZGenerational \
-  -XX:+AlwaysPreTouch \
-  -XX:+DisableExplicitGC \
-  -XX:+UnlockExperimentalVMOptions \
-  --add-modules=jdk.incubator.vector \
-  -jar server.jar --nogui
+java -Xms10G -Xmx10G -XX:+UseZGC -XX:+ZGenerational -XX:+AlwaysPreTouch -XX:+DisableExplicitGC -XX:+UnlockExperimentalVMOptions --add-modules=jdk.incubator.vector -jar server.jar --nogui
 ```
 
-> Do not mix G1GC flags with ZGC. They are completely different collectors. ZGC has sub-millisecond pauses but higher CPU overhead. Use `/spark gcmonitor` to measure before switching.
+> Don't mix G1GC and ZGC flags. They are completely different collectors. ZGC has sub-millisecond pauses but higher CPU overhead. Use `/spark gcmonitor` to measure before switching.
 
 ### G1GC vs ZGC Comparison 2026
 
 | Metric | G1GC | Generational ZGC |
-|--------|------|-----------------|
-| GC Pauses | 50-200ms | under 1ms |
+|---------|------|-----------------|
+| GC Pauses | 50-200ms | less than 1ms |
 | Throughput | High | Moderate |
 | CPU Usage | Moderate | Higher |
 | Minimum RAM | 4GB | 8GB+ |
-| When to use | Most servers | 150+ players, high GC lag |
+| When to Use | Most servers | 150+ players, GC lag issues |
 
 ### Automatic Flag Generator
 
@@ -794,37 +765,37 @@ Add this flag **before** `-jar`. Allows Pufferfish to use SIMD instructions on y
 
 ### Plugins to Avoid
 
-#### Ground item cleanup plugins
+#### Item Cleanup Plugins
 
-Completely unnecessary. Replace with:
+Completely unnecessary. Replace them with:
 
 - [`merge-radius`](#merge-radius) in spigot.yml
 - [`alt-item-despawn-rate`](#alt-item-despawn-rate) in paper-world.yml
 
-Cleanup plugins constantly scan the world, consuming more resources than simply not generating excess items.
+Cleanup plugins constantly scan the world, consuming more resources than simply not generating excessive items.
 
 #### Mob Stacker Plugins
 
-Stacking entities with natural spawning causes more lag than it prevents. The server constantly tries to spawn more mobs to replace the stacks. The only acceptable case is with spawners with massive quantities on specialized servers.
+Stacking naturally spawned entities causes more lag than it prevents. The server constantly tries to spawn more mobs to replace the stacks. The only acceptable case is with spawners with massive quantities on specialized servers.
 
-#### Plugins that enable or disable other plugins
+#### Plugins That Enable or Disable Other Plugins
 
 Extremely dangerous. Loading a plugin at runtime can cause fatal data errors. Disabling one can break dependencies.
 
 > This includes the `/reload` command. [Read why it's a bad idea](https://madelinemiller.dev/blog/problem-with-reload/).
 
-#### EssentialsX and similar all-in-one plugins
+#### EssentialsX and Similar All-in-One Plugins
 
 EssentialsX loads dozens of features you probably don't use, many deprecated. Look for specialized plugins for the functions you actually need on [SpigotMC](https://www.spigotmc.org/resources/) or [Modrinth](https://modrinth.com/plugins).
 
 #### Anti-Lag and Magic Optimizer Plugins
 
-`LagRemover`, `UltimateLagFixer` and similar are, at best, useless and at worst, harmful. All the adjustments they make can be done manually with better control.
+`LagRemover`, `UltimateLagFixer`, and similar are, at best, useless and, at worst, harmful. All the adjustments they make can be done manually with better control.
 
 ### Recommended Plugins
 
 | Plugin | Purpose | Link |
-|--------|---------|------|
+|--------|-----------|--------|
 | **Spark** | Real-time CPU and memory profiling | [spark.lucko.me](https://spark.lucko.me) |
 | **Chunky** | Efficient chunk pre-generation | [modrinth.com/plugin/chunky](https://modrinth.com/plugin/chunky) |
 | **Plan** | Performance and player statistics | [planplugin.com](https://planplugin.com) |
@@ -840,15 +811,15 @@ EssentialsX loads dozens of features you probably don't use, many deprecated. Lo
 /mspt
 ```
 
-Paper's `/mspt` command shows how long the server took to calculate the last ticks.
+Paper's `/mspt` command shows how long the server took to calculate the last few ticks.
 
 | MSPT Value | Status |
 |-----------|--------|
-| under 50ms (both first values) | Healthy server (20 TPS) |
-| 50-100ms | Below 20 TPS, investigate |
-| over 100ms | Server with serious lag |
+| less than 50ms (both first values) | Healthy server (20 TPS) |
+| 50-100ms | Under 20 TPS, investigate |
+| more than 100ms | Server with serious lag |
 
-The **third value** is the maximum spike — occasional high values are normal.
+The **third value** is the maximum peak — occasional high values are normal.
 
 ### Spark — The Essential Profiler
 
@@ -858,25 +829,22 @@ The **third value** is the maximum spike — occasional high values are normal.
 /spark profiler start
 /spark profiler stop
 /spark gcmonitor
-/spark healthreport
+/spark health
 ```
 
-> **Note:** The correct command is `/spark healthreport`, not `/spark health`.
-
-Spark shows exactly which code is consuming the most CPU, allowing you to identify the plugin or system responsible for the lag.
+Spark shows exactly what code is consuming the most CPU, allowing you to identify the plugin or system responsible for the lag.
 
 > [Complete guide to finding lag spikes with Spark](https://spark.lucko.me/docs/guides/Finding-lag-spikes)
 
-### Timings (Removed in Paper 1.21+)
+### Timings (Legacy)
 
 ```bash
-# This command no longer works on Paper 1.21+
-# /timings paste
+/timings paste
 ```
 
-> **Timings has been removed from Paper 1.21+.** The command no longer uploads or generates reports. Use Spark exclusively — it is more accurate, has less overhead, and actively maintained.
+The basic built-in diagnostic tool. Has a serious impact on server performance during measurement. Use Spark whenever possible.
 
-If you are still on an older version, you can disable Timings to recover a small amount of performance:
+If you're using Purpur or Pufferfish, you can disable Timings completely:
 
 ```yaml
 # paper-global.yml
@@ -884,18 +852,18 @@ timings:
   enabled: false
 ```
 
-### Interpreting Results
+### Interpreting the Results
 
 ```
 TPS = Ticks Per Second (maximum 20)
-MSPT = Milliseconds Per Tick (target: under 50ms)
+MSPT = Milliseconds Per Tick (target: less than 50ms)
 
 TPS = 20 when 20 x MSPT <= 1000ms
 ```
 
 If your average MSPT is close to 50ms, the server is at its limit. Identify the culprit:
 
-1. **Too many mobs** — Reduce spawn-limits, activate DAB
+1. **Too many mobs** — Reduce spawn-limits, enable DAB
 2. **Chunks** — Reduce view and simulation distance
 3. **Plugins** — Use Spark to identify the culprit
 4. **Redstone** — Enable ALTERNATE_CURRENT
@@ -905,21 +873,21 @@ If your average MSPT is close to 50ms, the server is at its limit. Identify the 
 
 ## Exploits and How to Fix Them
 
-Exploits can cause devastating lag spikes or even crash the server. Check the full guide:
+Exploits can cause devastating lag spikes or even crash the server. Check the complete guide:
 
 **[Minecraft Exploits and How to Fix Them](https://github.com/zMarkitos/minecraft-exploits-and-how-to-fix-them)**
 
-### The most common in 2026
+### The Most Common in 2026
 
 | Exploit | Cause | Solution |
-|---------|-------|---------|
+|---------|-------|----------|
 | **TNT Dupers** | Thousands of TNT entities | `block-explosion-drop-decay: true` |
 | **Carpet Bombing** | Placing and breaking blocks quickly | Block rate limiting |
-| **0-Tick Farms** | Bugs in block update logic | Paper fixes these automatically |
-| **AFK Fish Farms** | Lag from quantity of fish | Limit arrow and fish despawn |
-| **End Crystal Lag** | End crystals in a loop | Limit `entity-per-chunk-save-limit` |
+| **0-Tick Farms** | Bugs in block updates | Paper fixes them automatically |
+| **AFK Fish Farms** | Lag from fish quantity | Limit arrow and fish despawning |
+| **End Crystal Lag** | End Crystals in a loop | Limit `entity-per-chunk-save-limit` |
 | **Treasure Map Lag** | Search in ungenerated chunks | `treasure-maps.enabled: false` |
-| **Nether Roof Exploit** | Players above the ceiling | `nether-ceiling-void-damage-height: 127` |
+| **Nether Roof Exploit** | Players above the roof | `nether-ceiling-void-damage-height: 127` |
 
 ---
 
@@ -929,37 +897,37 @@ Exploits can cause devastating lag spikes or even crash the server. Check the fu
 <summary><b>How much RAM does my server need?</b></summary>
 
 | Players | Recommended RAM |
-|---------|----------------|
+|-----------|----------------|
 | 1-10 | 4-6 GB |
 | 10-30 | 6-8 GB |
 | 30-60 | 8-12 GB |
 | 60+ | 12-16 GB and consider Folia |
 
-Don't assign more than 12-16GB without measuring first. G1GC scales well up to approximately 12GB.
+Don't allocate more than 12-16GB without measuring first. G1GC scales well up to about 12GB.
 
 </details>
 
 <details>
-<summary><b>What is the difference between TPS and MSPT?</b></summary>
+<summary><b>What's the difference between TPS and MSPT?</b></summary>
 
-- **TPS (Ticks Per Second):** How many ticks the server completes per second. Maximum 20. Below 20 there is perceptible lag.
-- **MSPT (Milliseconds Per Tick):** How long each tick takes. Maximum desired: 50ms. If a tick takes more than 50ms, the next one is delayed, lowering TPS.
+- **TPS (Ticks Per Second):** How many ticks the server completes per second. Maximum 20. Below 20 there is noticeable lag.
+- **MSPT (Milliseconds Per Tick):** How long each tick takes. Desirable maximum: 50ms. If a tick takes more than 50ms, the next one is delayed, lowering TPS.
 
-They are inversely related: high MSPT produces low TPS.
+They are inversely related: high MSPT causes low TPS.
 
 </details>
 
 <details>
-<summary><b>Why is there no guide for Modded servers?</b></summary>
+<summary><b>Why isn't there a guide for Modded servers?</b></summary>
 
-Modded servers (Forge, Fabric with mods) have their own optimization ecosystem with mods like Starlight, Lithium, FerriteCore, etc. This guide specializes in the plugin ecosystem (Paper/Bukkit). For modded, look for specific guides on [Fabric](https://fabricmc.net) or [NeoForge](https://neoforged.net).
+Modded servers (Forge, Fabric with mods) have their own optimization ecosystem with mods like Starlight, Lithium, FerriteCore, etc. This guide is specialized in the Paper/Bukkit plugin ecosystem. For modded, look for specific guides from [Fabric](https://fabricmc.net) or [NeoForge](https://neoforged.net).
 
 </details>
 
 <details>
 <summary><b>Can I use these configurations on 1.19.x?</b></summary>
 
-Most configurations apply to 1.19 - 1.21.x, although some specific values may vary. Always check the official documentation of the software you use.
+Most configurations apply to 1.19 - 1.21.x, although some specific values may vary. Always check the official documentation of the software you're using.
 
 </details>
 
@@ -983,7 +951,7 @@ You can also open an **Issue** if you find errors or have suggestions.
 
 | Source | Description |
 |--------|-------------|
-| [YouHaveTrouble/minecraft-optimization](https://github.com/zMarkitos_/zMOptimization_Minecraft_2026) | Original base guide |
+| [zMarkitos_/zMOptimization_Minecraft_2026](https://github.com/zMarkitos_/zMOptimization_Minecraft_2026) | Original base guide |
 | [PaperMC Documentation](https://docs.papermc.io) | Official Paper documentation |
 | [Pufferfish Optimization Guide](https://docs.pufferfish.host/optimization/) | Official Pufferfish guide |
 | [Purpur Documentation](https://purpurmc.org/docs/) | Official Purpur documentation |
@@ -999,11 +967,8 @@ You can also open an **Issue** if you find errors or have suggestions.
 Made for the Minecraft community
 
 [![GitHub](https://img.shields.io/badge/GitHub-zMarkitos-black?style=for-the-badge&logo=github)](https://github.com/zMarkitos)
-[![Twitter/X](https://img.shields.io/badge/Twitter-@zMarkitos_-blue?style=for-the-badge&logo=x)](https://x.com/zMarkitos)
 
 <br>
 
-> Based on the original project by [zMarkitos_](https://github.com/zMarkitos/zMOptimization_Minecraft_2026)
-> 2026 update and improvements by zMarkitos_
-
 </div>
+```
