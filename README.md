@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/zMarkitos/zMOptimization_Minecraft_2026/main/assets/banner.png" alt="Minecraft Optimization Guide" width="100%">
+<img src="https://raw.githubusercontent.com/zMarkitos/zMOptimization_Minecraft_2026/main/assets/banner.svg" alt="Minecraft Optimization Guide" width="100%">
 
 # zMOptimization_2026
 
