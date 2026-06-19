@@ -970,7 +970,4 @@ Hecho para la comunidad de Minecraft en espanol
 
 <br>
 
-> Basado en el proyecto original de [zMarkitos_](https://github.com/zMarkitos/zMOptimization_Minecraft_2026)
-> Actualizacion 2026 y mejoras por zMarkitos_
-
 </div>
