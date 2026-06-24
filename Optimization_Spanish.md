@@ -158,11 +158,13 @@ Si administras una **red de servidores**, la eleccion del proxy es crucial:
 network-compression-threshold=256
 ```
 
-Define el tamano minimo de un paquete antes de que el servidor lo comprima.
+Define el tamaño mínimo (en bytes) que debe tener un paquete de red para que el servidor lo comprima antes de enviarlo.
 
-- **Mas alto** — Menos CPU, mas ancho de banda
-- **`-1`** — Desactiva la compresion (ideal si el proxy esta en la misma maquina con menos de 2ms de ping)
-- **Mas bajo** — Mas CPU, menos ancho de banda (perjudica conexiones lentas)
+La compresión ayuda a reducir el uso de ancho de banda, pero aumenta ligeramente el uso de CPU. Los paquetes pequeños no se comprimen para evitar sobrecarga innecesaria.
+
+* **Valor más alto** — Menos uso de CPU, más tráfico de red sin comprimir
+* **Valor más bajo** — Más compresión, menor uso de ancho de banda, pero mayor carga de CPU
+* **`-1`** — Desactiva la compresión (envía todo sin comprimir; puede aumentar significativamente el uso de ancho de banda)
 
 </details>
 
