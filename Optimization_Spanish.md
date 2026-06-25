@@ -418,6 +418,12 @@ entities:
       water_creature:
         hard: 72
         soft: 30
+      underground_water_creature:
+        hard: 72
+        soft: 30
+      water_ambient:
+        hard: 72
+        soft: 30
 ```
 
 - **Soft range:** probabilidad aleatoria de despawn
@@ -651,6 +657,42 @@ entities:
 ```
 
 Las flechas de mobs y modo creativo desaparecen en 1 segundo (20 ticks) tras impactar. Los jugadores no pueden recogerlas de todas formas.
+
+</details>
+
+<details>
+<summary><b>tick-rates</b> — Ver valores recomendados</summary>
+
+```yaml
+tick-rates:
+  behavior:
+    villager:
+      validatenearbypoi: 60
+      acquirepoi: 120
+  sensor:
+    villager:
+      secondarypoisensor: 80
+      nearestbedsensor: 80
+      villagerbabiessensor: 40
+      playersensor: 40
+      nearestlivingentitysensor: 40
+  grass-spread: 4
+  mob-spawner: 2
+```
+
+Controla cada cuántos ticks se ejecutan comportamientos y sensores específicos de entidades, así como ciertos bloques y spawners.
+
+**Comportamientos de aldeanos** — Los aldeanos son una de las entidades más pesadas del servidor. Estos valores reducen la frecuencia con la que buscan POIs y camas, que es su operación más costosa. `acquirepoi` (encontrar un puesto de trabajo o cama) es el comportamiento más intensivo en CPU y es el que más se beneficia de un valor más alto.
+
+> ⚠️ **Si usas Pufferfish o Purpur con DAB activado, cambiar estos tick-rates de aldeanos puede ser redundante o contraproducente.** DAB ya gestiona el throttling del cerebro de las entidades según la distancia. Baja los valores de aldeanos solo si observas lag específico de aldeanos con DAB desactivado, o como complemento en servidores sin Pufferfish.
+
+**`grass-spread: 4`** — Reduce la frecuencia con la que el servidor intenta extender el pasto a bloques de tierra adyacentes. El valor por defecto (`1`) lo comprueba cada tick; con `4` el pasto sigue extendiéndose a un ritmo razonable pero con mucho menos uso de CPU.
+
+**`mob-spawner: 2`** — Reduce la frecuencia con la que los spawners calculan las zonas de spawn disponibles. El valor por defecto (`1`) corre cada tick; `2` reduce esa frecuencia a la mitad con un impacto mínimo en las tasas de spawn. Usa `-1` para desactivar todos los spawners por completo.
+
+Otras opciones de tick-rate disponibles (déjalas en `1` por defecto salvo que tengas una razón específica):
+- `container-update` — Con qué frecuencia el servidor sincroniza inventarios con los clientes. Valores mayores a `1` pueden causar desincronización o aparición fantasma de ítems.
+- `dry-farmland` / `wet-farmland` — Con qué frecuencia la tierra de cultivo comprueba su humedad. Valores más altos ralentizan el ciclo de secado y humedecimiento del suelo.
 
 </details>
 
