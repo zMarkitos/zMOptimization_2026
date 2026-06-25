@@ -654,6 +654,59 @@ Arrows from mobs and creative mode disappear in 1 second (20 ticks) after impact
 
 </details>
 
+<details>
+<summary><b>tick-rates</b> — Recommended values</summary>
+
+```yaml
+tick-rates:
+  behavior:
+    villager:
+      validatenearbypoi: 60
+      acquirepoi: 120
+  sensor:
+    villager:
+      secondarypoisensor: 80
+      nearestbedsensor: 80
+      villagerbabiessensor: 40
+      playersensor: 40
+      nearestlivingentitysensor: 40
+  grass-spread: 4
+  mob-spawner: 2
+```
+
+Controls how often (in ticks) specific entity behaviors and sensors fire, as well as certain block and spawner tick rates.
+
+**Villager behaviors** — Villagers are one of the heaviest entities on the server. These values reduce how frequently they search for POIs and beds, which is their most expensive operation. `acquirepoi` (finding a workstation or bed) is the most CPU-intensive behavior and benefits the most from a higher value.
+
+> ⚠️ **If you are using Pufferfish or Purpur with DAB enabled, changing these villager tick-rates may be redundant or counterproductive.** DAB already handles entity brain throttling based on distance. Lower the villager values only if you observe villager-specific lag after disabling DAB, or as a complement on servers without Pufferfish.
+
+**`grass-spread: 4`** — Reduces how often the server checks to spread grass to adjacent dirt blocks. The default (`1`) checks every tick; `4` still spreads grass at a reasonable rate with significantly less CPU usage.
+
+**`mob-spawner: 2`** — Reduces how often spawners tick to calculate available spawn areas. The default (`1`) runs every tick; `2` cuts the calculation frequency in half with minimal impact on spawn rates. Set to `-1` to disable all spawners entirely.
+
+Other available tick-rate options (leave at default `1` unless you have a specific reason):
+- `container-update` — How often the server syncs inventories with clients. Values above `1` can cause item ghosting or desync.
+- `dry-farmland` / `wet-farmland` — How often farmland checks for moisture. Higher values slow down soil drying/wetting cycles.
+
+</details>
+
+<details>
+<summary><b>unsupported-settings</b> — Recommended values</summary>
+
+```yaml
+unsupported-settings:
+  disable-world-ticking-when-empty: true
+  fix-invulnerable-end-crystal-exploit: true
+```
+
+> ⚠️ These settings are not officially supported by PaperMC and may be removed in future versions. Use at your own risk.
+
+**`disable-world-ticking-when-empty: true`** — Stops ticking a world entirely when no players are present and no force-loaded chunks exist. Highly recommended if your server has the Nether or End loaded but players rarely visit them. Includes mob spawning, random block ticks, weather, and ice/snow creation.
+
+**`fix-invulnerable-end-crystal-exploit: true`** — Prevents the creation of invulnerable End Crystals, which can be used to lag or crash servers. Keep this `true` unless you have a very specific PvP reason to allow it (fixes [MC-108513](https://bugs.mojang.com/browse/MC-108513)).
+
+</details>
+
 ---
 
 ### Helpers and Security
